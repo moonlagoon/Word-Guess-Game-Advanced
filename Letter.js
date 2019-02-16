@@ -1,10 +1,10 @@
 
-var Letter = function(character) {
-	this.character = character.toUpperCase();
+var Letter = function(typedLetter) {
+	this.typedLetter = typedLetter.toUpperCase();
 	this.letterGuessedCorrectly = false;
-	this.showCharacter = function() {
+	this.showtypedLetter = function() {
 		if (this.letterGuessedCorrectly) {
-			console.log(this.character);
+			console.log(this.typedLetter);
 		}
 		else {
 		}

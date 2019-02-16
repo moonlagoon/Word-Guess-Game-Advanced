@@ -15,14 +15,14 @@ var userGuessedCorrectly = false;
 var wordList = ["florida", "coding", "brocolli", "halloween", "beer", "carrot", "amusement", "construe", "mountain", "attraction", "queen", "aquatic", "dramatic", "pancake", "anxious", "balloon"];
 
 var randomWord;
-var someWord;
+var pullWord;
 var wins = 0;
 var losses = 0;
-var guessesRemaining = 10;
+var remainingAttempts = 10;
 var userGuess = "";
 
-var lettersAlreadyGuessedList = "";
-var lettersAlreadyGuessedListArray = [];
+var attemptedGuess = "";
+var attemptedGuessArray = [];
 
 var spotsFilled = 0;
 
@@ -79,31 +79,31 @@ function confirmStart() {
 
 function startGame() {
 
-	guessesRemaining = 12;
+	remainingAttempts = 12;
 
 	chooseRandomWord();
 
-	lettersAlreadyGuessedList = "";
-	lettersAlreadyGuessedListArray = [];
+	attemptedGuess = "";
+	attemptedGuessArray = [];
 }
 
 function chooseRandomWord() {
 
 	randomWord = wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
-	someWord = new Word(randomWord);
+	pullWord = new Word(randomWord);
 
 	console.log(colorText("There are " + randomWord.length + " letters in this word"));
 	console.log(colorText("TARGET WORD:"));
 
-	someWord.splitWord();
-	someWord.generateLetters();
+	pullWord.splitWord();
+	pullWord.generateLetters();
 	guessLetter();
 }
 
 function guessLetter() {
 
-	if (spotsFilled < someWord.letters.length || guessesRemaining > 0) {
+	if (spotsFilled < pullWord.letters.length || remainingAttempts > 0) {
 		inquirer.prompt([
 			{
 				name: "letter",
@@ -125,33 +125,33 @@ function guessLetter() {
 
 			userGuessedCorrectly = false;
 
-			if (lettersAlreadyGuessedListArray.indexOf(guess.letter.toUpperCase()) > -1) {
+			if (attemptedGuessArray.indexOf(guess.letter.toUpperCase()) > -1) {
 
 				console.log(colorText("You've already guessed that!"));
 				console.log(colorText("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
 				guessLetter();
 			}
 
-			else if (lettersAlreadyGuessedListArray.indexOf(guess.letter.toUpperCase()) === -1) {
+			else if (attemptedGuessArray.indexOf(guess.letter.toUpperCase()) === -1) {
 
-				lettersAlreadyGuessedList = lettersAlreadyGuessedList.concat(" " + guess.letter.toUpperCase());
+				attemptedGuess = attemptedGuess.concat(" " + guess.letter.toUpperCase());
 
-				lettersAlreadyGuessedListArray.push(guess.letter.toUpperCase());
+				attemptedGuessArray.push(guess.letter.toUpperCase());
 
-				console.log(boxen(colorText('Letters already guessed: ') + lettersAlreadyGuessedList, { padding: 1 }));
+				console.log(boxen(colorText('Letters already guessed: ') + attemptedGuess, { padding: 1 }));
 
-				for (i = 0; i < someWord.letters.length; i++) {
+				for (i = 0; i < pullWord.letters.length; i++) {
 
-					if (guess.letter.toUpperCase() === someWord.letters[i].character && someWord.letters[i].letterGuessedCorrectly === false) {
-						someWord.letters[i].letterGuessedCorrectly === true;
+					if (guess.letter.toUpperCase() === pullWord.letters[i].character && pullWord.letters[i].letterGuessedCorrectly === false) {
+						pullWord.letters[i].letterGuessedCorrectly === true;
 						userGuessedCorrectly = true;
-						someWord.underscores[i] = guess.letter.toUpperCase();
+						pullWord.underscores[i] = guess.letter.toUpperCase();
 						spotsFilled++
 					}
 				}
 				console.log(colorText("TARGET WORD:"));
-				someWord.splitWord();
-				someWord.generateLetters();
+				pullWord.splitWord();
+				pullWord.generateLetters();
 
 
 				if (userGuessedCorrectly) {
@@ -166,8 +166,8 @@ function guessLetter() {
 
 					console.log(incorrect('INCORRECT'));
 
-					guessesRemaining--;
-					console.log(colorText("You have " + guessesRemaining + " guesses remaining."));
+					remainingAttempts--;
+					console.log(colorText("You have " + remainingAttempts + " guesses remaining."));
 					console.log(colorText("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
 
 					checkIfUserWon();
@@ -178,7 +178,7 @@ function guessLetter() {
 }
 
 function checkIfUserWon() {
-	if (guessesRemaining === 0) {
+	if (remainingAttempts === 0) {
 		console.log(colorText("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
 		console.log(incorrect('YOU LOST. TOO BAD!'));
 		console.log(colorText("Correct word was: ------------> " + randomWord + " <------------"));
@@ -191,7 +191,7 @@ function checkIfUserWon() {
 
 		playAgain();
 	}
-	else if (spotsFilled === someWord.letters.length) {
+	else if (spotsFilled === pullWord.letters.length) {
 		console.log(colorText("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
 		console.log(correct("YOU WON! CONGRATULATIONS!"));
 
@@ -223,8 +223,8 @@ function playAgain() {
 	inquirer.prompt(playGameAgain).then(userWantsTo => {
 		if (userWantsTo.playAgain) {
 
-			lettersAlreadyGuessedList = "";
-			lettersAlreadyGuessedListArray = [];
+			attemptedGuess = "";
+			attemptedGuessArray = [];
 			spotsFilled = 0;
 			console.log(colorText("Awesome! Let's play..."));
 

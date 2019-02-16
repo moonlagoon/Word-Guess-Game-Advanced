@@ -1,14 +1,14 @@
 
 var Letter = require("./Letter");
 
-var Word = function(myWord) {
-	this.myWord = myWord;
+var Word = function(randoWord) {
+	this.randoWord = randoWord;
 	this.letters = [];
 	
 	this.underscores = [];
 	
 	this.splitWord = function() {
-		this.letters = this.myWord.split("");
+		this.letters = this.randoWord.split("");
 		
 		numberUnderscoresNeeded = this.letters.length;
 		
